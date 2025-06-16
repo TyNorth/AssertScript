@@ -254,7 +254,7 @@ const handleRegister = () => {
   </div>
 </template>
 
-<style scoped>
+<style scoped lang="css">
 /* Custom Accent, Error, Success (high contrast, not directly from base.css) */
 /* These remain custom to ensure visual distinctiveness and contrast */
 :root {
@@ -469,19 +469,17 @@ const handleRegister = () => {
   width: 100%;
   padding: 1rem 2.5rem;
   border-radius: 0.6rem;
-  color: var(--color-heading); /* Directly uses base.css heading color */
+  color: var(--color-background); /* Directly uses base.css heading color */
   font-weight: 600;
   font-size: 1.15rem;
   transition: all 0.2s ease-in-out;
   box-shadow: 0 3px 6px var(--light-shadow-color);
   border: 1px solid var(--accent-color);
-  background-color: var(--accent-color);
+  background-color: var(--color-heading);
   cursor: pointer;
 }
 
 .submit-button:not(:disabled):hover {
-  background-color: var(--accent-color-hover);
-  border-color: var(--accent-color-hover);
   transform: translateY(-3px);
   box-shadow: 0 6px 12px var(--shadow-color);
 }
