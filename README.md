@@ -1,21 +1,21 @@
-# Assertify
+# AssertScript
 
 [![Build Status](https://img.shields.io/badge/build-passing-brightgreen)](https://github.com/actions)
-[![NPM Version](https://img.shields.io/npm/v/@simdev01/assertify)](https://www.npmjs.com/package/@simdev01/assertify)
+[![NPM Version](https://img.shields.io/npm/v/@simdev01/assertscript)](https://www.npmjs.com/package/@simdev01/assertscript)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-A lightweight, zero-dependency, runtime validation library powered by code generation. Define your data shapes in a simple JSON file and Assertify generates highly-optimized validation and sanitization functions, plus TypeScript definitions automatically.
+A lightweight, zero-dependency, runtime validation library powered by code generation. Define your data shapes in a simple JSON file and AssertScript generates highly-optimized validation and sanitization functions, plus TypeScript definitions automatically.
 
 ---
 
 ## Overview
 
-Assertify solves the problem of wanting type-safety in JavaScript without the overhead of a full TypeScript compilation step. It provides runtime guarantees that your data structures are correct, which is essential for validating API responses, form data, and function arguments.
+AssertScript solves the problem of wanting type-safety in JavaScript without the overhead of a full TypeScript compilation step. It provides runtime guarantees that your data structures are correct, which is essential for validating API responses, form data, and function arguments.
 
 The core workflow is simple:
 
 1. **Define:** You declare all your data shapes and rules in a single `types.json` file.
-2. **Generate:** Run the Assertify Node.js script to automatically generate `validators.js` and `validators.d.ts` files.
+2. **Generate:** Run the AssertScript Node.js script to automatically generate `validators.js` and `validators.d.ts` files.
 3. **Assert or Validate:** Import the generated functions into your application to perform fast, precise, and descriptive runtime validation.
 
 ## Features

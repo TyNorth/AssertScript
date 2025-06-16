@@ -1,11 +1,11 @@
 {
-  "name": "@simdev01/assertify",
+  "name": "@simdev01/assertscript",
   "private": false,
   "version": "1.1.0",
   "description": "A lightweight code generator that creates zero-dependency, runtime validation functions and TypeScript types from a JSON schema.",
   "main": "generate-validators.cjs",
   "bin": {
-    "assertify": "generate-validators.cjs"
+    "assertscript": "generate-validators.cjs"
   },
   "scripts": {
     "dev": "vite",
@@ -31,12 +31,12 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/TyNorth/assertify.git"
+    "url": "git+https://github.com/TyNorth/assertscript.git"
   },
   "bugs": {
-    "url": "https://github.com/TyNorth/assertify/issues"
+    "url": "https://github.com/TyNorth/assertscript/issues"
   },
-  "homepage": "https://github.com/TyNorth/assertify#readme",
+  "homepage": "https://github.com/TyNorth/assertscript#readme",
   "type": "module",
   "devDependencies": {
     "@eslint/js": "^9.22.0",
