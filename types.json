@@ -5,5 +5,15 @@
     "email": "string",
     "isAdmin": "boolean",
     "bio?": "string"
+  },
+  "Seller": {
+    "sellerId": "number",
+    "companyName": "string",
+    "isVerified?": "boolean"
+  },
+  "Product": {
+    "productId": "string",
+    "price": "number",
+    "seller": "Seller"
   }
 }
