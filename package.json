@@ -12,7 +12,10 @@
     "lint:eslint": "eslint . --fix",
     "lint": "run-s lint:*",
     "format": "prettier --write src/",
-    "generate": "node ./generate-validators.cjs"
+    "generate": "node ./generate-validators.cjs",
+    "generate:dts": "node ./generate-validators.cjs --dts",
+    "watch": "node ./generate-validators.cjs --watch",
+    "test": "vitest"
   },
   "dependencies": {
     "vue": "^3.5.13"
@@ -23,6 +26,7 @@
     "@vitest/eslint-plugin": "^1.1.39",
     "@vue/eslint-config-prettier": "^10.2.0",
     "@vue/test-utils": "^2.4.6",
+    "chokidar": "^4.0.3",
     "eslint": "^9.22.0",
     "eslint-plugin-oxlint": "^0.16.0",
     "eslint-plugin-vue": "~10.0.0",
@@ -33,6 +37,7 @@
     "prettier": "3.5.3",
     "vite": "^6.2.4",
     "vite-plugin-vue-devtools": "^7.7.2",
-    "vitest": "^3.1.1"
+    "vitest": "^3.2.3",
+    "yargs": "^18.0.0"
   }
 }
