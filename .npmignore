@@ -1,0 +1,24 @@
+# Node modules
+/node_modules/
+
+# Vite/Vue test app files
+/src/
+/public/
+index.html
+vite.config.js
+vitest.config.js
+jsconfig.json
+
+# Test files
+*.test.js
+*.test.cjs
+
+# Config files
+.editorconfig
+.gitattributes
+.prettierrc.json
+.vscode/
+eslint.config.js
+
+# Git files
+.gitignore

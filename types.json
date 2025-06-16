@@ -1,32 +1,23 @@
 {
   "User": {
-    "id": { "type": "number" },
-    "username": {
-      "type": "string",
-      "minLength": 3,
-      "maxLength": 20
-    },
-    "email": {
-      "type": "string",
-      "pattern": "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$"
-    },
-    "age?": {
-      "type": "number",
-      "min": 18
-    },
-    "status": {
-      "type": "string",
-      "enum": ["active", "inactive", "pending"]
-    }
+    "id": "number",
+    "username": "string",
+    "email": "string",
+    "isAdmin": "boolean",
+    "bio?": "string"
   },
   "Seller": {
-    "sellerId": { "type": "number" },
-    "companyName": { "type": "string" },
-    "isVerified?": { "type": "boolean" }
+    "sellerId": "number",
+    "companyName": "string",
+    "isVerified?": "boolean"
   },
   "Product": {
-    "productId": { "type": "string" },
-    "price": { "type": "number", "min": 0 },
-    "seller": { "type": "Seller" }
+    "productId": "string",
+    "price": "number",
+    "seller": "Seller"
+  },
+  "Review": {
+    "rating": "number",
+    "comment?": "string"
   }
 }
