@@ -1,7 +1,7 @@
 {
   "name": "@simdev01/assertify",
   "private": false,
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "A lightweight code generator that creates zero-dependency, runtime validation functions and TypeScript types from a JSON schema.",
   "main": "generate-validators.cjs",
   "bin": {
