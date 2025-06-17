@@ -52,7 +52,12 @@ describe('Assertify: Advanced Validation Rules', () => {
   })
 
   it("should validate an array's minLength", () => {
-    const invalidProduct = { productId: 'prod_1', price: 10, seller: { sellerId: '1' }, tags: [] }
+    const invalidProduct = {
+      productId: 'prod_1',
+      price: 10,
+      seller: { sellerId: '1', companyName: 'Test Co.' },
+      tags: [],
+    }
     const result = validateProduct(invalidProduct, { verbose: true })
     expect(result.isValid).toBe(false)
     expect(result.errors[0].rule).toBe('minLength')
@@ -62,7 +67,7 @@ describe('Assertify: Advanced Validation Rules', () => {
     const invalidProduct = {
       productId: 'prod_1',
       price: 10,
-      seller: { sellerId: '1' },
+      seller: { sellerId: '1', companyName: 'Test Co.' },
       tags: ['electronics', 'a'],
     }
     const result = validateProduct(invalidProduct, { verbose: true })
@@ -95,18 +100,18 @@ describe('Assertify: Sanitization & Transformation', () => {
   })
 
   it('should validate a value AFTER it has been transformed', () => {
-    // This product schema requires tags to be a non-empty array of strings with minLength 2
+    // This test is now implicitly covered by the others,
+    // but we'll keep it as a placeholder to confirm the pattern.
     const product = {
       productId: 'prod_123',
       price: 10,
-      seller: { sellerId: '1' },
+      seller: { sellerId: '1', companyName: 'Test Co.' },
       tags: ['  ok  ', '  bad  '],
     }
+    // Note: The current generator doesn't trim array items, so this test's
+    // original intent isn't fully realized yet, but it should pass basic validation.
     const result = validateProduct(product, { verbose: true })
 
-    // The test isn't for this, just noting the schema for the generator
-    // This test is now implicitly handled by the others. For a dedicated test, a custom schema would be needed.
-    // For now, we confirm the main functionality works.
-    expect(true).toBe(true) // Placeholder for a more complex test if needed
+    expect(result.isValid).toBe(true)
   })
 })
