@@ -1,187 +1,149 @@
-# AssertScript
+# **MycoAssert**
 
-[![Build Status](https://img.shields.io/badge/build-passing-brightgreen)](https://github.com/actions)
-[![NPM Version](https://img.shields.io/npm/v/@simdev01/assertscript)](https://www.npmjs.com/package/@simdev01/assertscript)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+A dynamic, zero-dependency, runtime validation library designed for modular and decentralized application architectures.
 
-A lightweight, zero-dependency, runtime validation library powered by code generation. Define your data shapes in a simple JSON file and AssertScript generates highly-optimized validation and sanitization functions, plus TypeScript definitions automatically.
+## **Core Philosophy**
 
----
+MycoAssert is built to solve the "contract" problem in a micro-frontend or plug-in system, referred to as the "Mycelial/Spore" architecture. It ensures that a host application (a "Shell") and a dynamically loaded module (a "Spore") can safely interact by verifying their shared data and function contracts at runtime.
 
-## Overview
+* **Declarative:** Define the "shape" of your data and contracts using simple, readable JavaScript objects.  
+* **Dynamic & Runtime-First:** No build step or code generation is required to perform validation. Schemas are plain objects that can be loaded and processed on the fly.  
+* **Developer-Friendly:** Throws detailed, structured ValidationError objects, making error handling and UI feedback simple and robust.  
+* **Powerful:** Handles nested objects, optional properties, data sanitization, and high-level contract verification out of the box.
 
-AssertScript solves the problem of wanting type-safety in JavaScript without the overhead of a full TypeScript compilation step. It provides runtime guarantees that your data structures are correct, which is essential for validating API responses, form data, and function arguments.
+## **Features**
 
-The core workflow is simple:
+* **Runtime Validation:** Validate objects against schemas directly in your code.  
+* **Nested Schemas:** Create complex data models by referencing schemas within other schemas.  
+* **Optional Properties:** Mark properties as optional using the ? suffix (e.g., 'age?').  
+* **Data Sanitization & Transformation:** Includes a chainable transform rule for cleaning data (trim, toLowerCase, toInt) during the validation process.  
+* **Structured Errors:** Throws a custom ValidationError with properties like .property, .rule, and .value for easy programmatic error handling.  
+* **High-Level Contract API:** Provides a top-level verifyContract function designed to validate a Shell's entire CTX against a Spore's contract.  
+* **Zero Dependencies:** Clean, lightweight, and easy to integrate.
 
-1. **Define:** You declare all your data shapes and rules in a single `types.json` file.
-2. **Generate:** Run the AssertScript Node.js script to automatically generate `validators.js` and `validators.d.ts` files.
-3. **Assert or Validate:** Import the generated functions into your application to perform fast, precise, and descriptive runtime validation.
+## **Local Installation & Usage**
 
-## Features
+Since this project is private, it's intended to be used as a local package. The recommended method is using npm pack.
 
-- **Zero Production Dependencies:** The generated validation code is pure, vanilla JavaScript.
-- **Dual-Mode Operation:** Functions can fail-fast by throwing errors (assertion) or return a detailed result object (verbose validation).
-- **Data Sanitization:** Automatically cleans and transforms data (e.g., trims whitespace, converts strings to numbers) based on schema rules.
-- **Rich Validation Rules:** Go beyond simple `typeof` checks with powerful content-based rules.
-- **TypeScript Declaration Generation:** Get full autocompletion and type-checking in your editor (like VS Code) for free, even in a `.js` project.
-- **Watch Mode:** Automatically regenerates validators and types whenever your schema changes.
-- **Robust CLI:** A professional command-line interface for easy use.
+1. **Pack the Library**  
+   In the root directory of the MycoAssert project, run:  
+   npm pack
 
-## Setup
+   This will create a mycoassert-1.0.0.tgz file (the version may vary).  
+2. **Install in Your "Shell" Project**  
+   In your main application's project directory, install the packed file using its relative path:  
+   \# Example from a parent directory  
+   npm install ./MycoAssert/mycoassert-1.0.0.tgz
 
-1. **Install dependencies:** This project uses a few development dependencies for code generation and testing.
+3. **Import and Use**  
+   You can now import MycoAssert's functions in your application:  
+   import { assert, verifyContract, ValidationError } from 'mycoassert';
 
-   ```bash
-   npm install
-   ```
+## **Core Concepts & API**
 
-2. **Define Your Types:** Edit the `types.json` file to define your data structures according to the guide below.
-3. **Generate Validators:** Run one of the following commands:
+### **1\. The assert function**
 
-   ```bash
-   # Generate validators once
-   npm run generate
+This is the core, low-level validation and sanitization engine.
 
-   # Generate validators and the .d.ts file for type-safety
-   npm run generate:dts
+**Signature:** assert(data, schema, \[allSchemas\])
 
-   # Start watch mode for automatic regeneration on save
-   npm run watch
-   ```
+* data: The object to validate.  
+* schema: A schema object defining the rules for data.  
+* allSchemas (optional): An object containing all available schemas, used for nesting.
 
-## Usage
+Upon success, it returns the sanitized data object. Upon failure, it throws a ValidationError.
 
-Each validator can be used in two modes, chosen at runtime.
+#### **Basic Validation & Sanitization**
 
-#### Assertion Mode (Default)
+import { assert } from 'mycoassert';
 
-Ideal for backend services or critical paths where you want to fail fast. It throws a descriptive error on the first validation failure.
+const userSchema \= {  
+  username: {  
+    type: 'string',  
+    minLength: 3,  
+    transform: \['trim', 'toLowerCase'\]  
+  }  
+};
 
-```javascript
-import { validateUser } from './validators.js'
+const dirtyData \= { username: '  MycoUser  ' };
 
-const badUserData = { id: 1, username: 'a' } // Username is too short
-
-try {
-  validateUser(badUserData)
-  // This line will not be reached
-} catch (error) {
-  console.error(error.message)
-  // Output: "Validation failed for User.username: must be at least 3 characters long."
+try {  
+  const sanitizedUser \= assert(dirtyData, userSchema);  
+  console.log('Sanitized:', sanitizedUser); // { username: 'mycouser' }  
+} catch (error) {  
+  // Handle the error  
 }
-```
 
-#### Verbose Mode
+#### **Handling Errors**
 
-Pass `{ verbose: true }` as the second argument. This mode never throws. It's perfect for UI form validation where you want to collect all errors at once.
+import { assert, ValidationError } from 'mycoassert';
 
-The function returns an object: `{ isValid: boolean, errors: Array, value: object }`.
+const schema \= { name: { type: 'string', minLength: 5 } };  
+const invalidData \= { name: 'Joe' };
 
-```javascript
-import { validateUser } from './validators.js'
-
-const formInput = { id: 1, username: 'a', email: 'bad-email' }
-const result = validateUser(formInput, { verbose: true })
-
-if (!result.isValid) {
-  console.log('Please fix the following errors:')
-  for (const err of result.errors) {
-    // err is an object: { property: 'username', rule: 'minLength', message: '...' }
-    console.log(`- ${err.property}: ${err.message}`)
-  }
-} else {
-  // The 'value' property contains the cleaned and sanitized data
-  const sanitizedUser = result.value
-  // ... do something with the safe data
+try {  
+  assert(invalidData, schema);  
+} catch (error) {  
+  if (error instanceof ValidationError) {  
+    console.error('Property:', error.property); // 'name'  
+    console.error('Rule:', error.rule);         // 'minLength'  
+    console.error('Value:', error.value);       // 'Joe'  
+  }  
 }
-```
 
-## Schema Definition Guide (`types.json`)
+### **2\. The verifyContract function**
 
-This is the API for defining your data shapes.
+This is the high-level API designed for a "Shell" to validate a "Spore's" contract against its own CTX.
 
-#### Basic Types & Optional Properties
+**Signature:** verifyContract(ctx, contract)
 
-By default, all properties are required. Add a `?` to a property name to make it optional.
+* ctx: The Shell's implemented Context object.  
+* contract: The Spore's contract schema.
 
-```json
-"MyType": {
-  "id": { "type": "number" },
-  "name": { "type": "string" },
-  "isActive": { "type": "boolean" },
-  "notes?": { "type": "string" }
+Returns true on success, throws ValidationError on failure.
+
+#### **Contract Verification Example**
+
+import { verifyContract } from 'mycoassert';
+
+const sporeContract \= {  
+  data: {  
+    users: { type: 'object', get: { type: 'function' } }  
+  }  
+};
+
+const shellCTX \= {  
+  data: {  
+    users: {  
+      get: (userId) \=\> { /\* ... fetches user ... \*/ }  
+    }  
+  }  
+};
+
+try {  
+  verifyContract(shellCTX, sporeContract);  
+  console.log('Spore is compatible with this Shell\!');  
+} catch (error) {  
+  console.error('Compatibility check failed:', error.message);  
 }
-```
 
-#### Nested Types (Composition)
+## **Development**
 
-Reference another type by using its name as the `type`.
+To work on MycoAssert itself:
 
-```json
-"Product": {
-  "productId": { "type": "string" },
-  "seller": { "type": "Seller" }
-}
-```
+1. **Setup:** Clone the repository and run npm install.  
+2. **File Structure:** The core runtime logic resides in /src/runtime/.  
+   * assert.js: The main validation engine.  
+   * rules.js: Contains the rulesEngine and transformsEngine.  
+   * errors.js: Defines the custom ValidationError.  
+   * verifyContract.js: The high-level API.  
+3. **Testing:** Run the test suite with:  
+   npm test
 
-#### Content Validation Rules
+**Note:** The original schema-based generator script (generate-validators.cjs) has been superseded by the dynamic runtime engine but is kept in the repository for historical reference.
 
-| Rule         | Type     | Description                                          |
-| ------------ | -------- | ---------------------------------------------------- |
-| `minLength`  | `string` | The minimum number of characters.                    |
-| `maxLength`  | `string` | The maximum number of characters.                    |
-| `pattern`    | `string` | A regular expression string the value must match.    |
-| `min`        | `number` | The minimum numeric value.                           |
-| `max`        | `number` | The maximum numeric value.                           |
-| `enum`       | `string` | An array of specific string values that are allowed. |
-| `isInteger`  | `number` | Value must be a whole number.                        |
-| `startsWith` | `string` | Value must start with the given substring.           |
+## **Roadmap & Future Enhancements**
 
-#### Advanced Array Validation
-
-You can specify rules for the array itself (`minLength`) and for the `items` within it.
-
-```json
-"Product": {
-  "tags": {
-    "type": "array",
-    "minLength": 1,
-    "items": {
-      "type": "string",
-      "minLength": 2
-    }
-  }
-}
-```
-
-#### Sanitization & Transformation
-
-Use the `transform` array to clean and process data _before_ it's validated.
-
-| Transform     | Description                          |
-| ------------- | ------------------------------------ |
-| `trim`        | Removes leading/trailing whitespace. |
-| `toLowerCase` | Converts the string to lowercase.    |
-| `toUpperCase` | Converts the string to uppercase.    |
-| `toInt`       | Parses the value into an integer.    |
-
-**Example:**
-
-```json
-"User": {
-  "username": {
-    "type": "string",
-    "minLength": 3,
-    "transform": ["trim", "toLowerCase"]
-  },
-  "id_from_url": {
-    "type": "string",
-    "transform": ["toInt"]
-  }
-}
-```
-
-## License
-
-This project is licensed under the MIT License.
+* **CRDT-Specific Rules:** Add rules to the rulesEngine for validating Y.js types (e.g., isYMap, isYArray).  
+* **Live Function Testing:** Enhance verifyContract to optionally execute CTX functions with mock data and validate their return value schemas.  
+* **Async Validation:** Support rules that are themselves asynchronous.
